@@ -123,7 +123,6 @@ def main(args):
         logger.info(f"Downloading PDFs into {args.output_dir} ...")
         for record in records:
             record.download_pdf(args.output_dir)
-        logger.info("Done.")
 
 
 if __name__ == "__main__":
