@@ -68,6 +68,7 @@ Keywords (IT): legge, ordinanza, raccolta sistematica del diritto federale (RS),
 # TODO
 
   * Choose language for downloads (currently: PDFs are downloaded in German).
+  * Parse dates (currently: returned as string).
   * Make available as pip package on Pypi.org. Prerequisite: Have a catchy name.
   * Provide history for a record.
   * Provide change list for a record.

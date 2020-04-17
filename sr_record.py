@@ -31,17 +31,31 @@ class SrRecord(object):
 
     def __init__(self, sr_id):
         self.sr_id = sr_id
+        self.url = ""
+        self.title = ""
+        self.is_active = ""
+        self.last_update = ""
+        self.pdf_url = ""
 
     def populate(self):
         url = search_url.format(self.sr_id)
         r = requests.get(url)
+
+        # check if this looks like a legal record
+        if not r.status_code == 200 \
+                or "classified-compilation" not in r.url \
+                or "index.html" not in r.url:
+            logger.info(f"Could not obtain details for ID {self.sr_id}.")
+            return
+
         soup = BeautifulSoup(r.text, 'html.parser')
         self.url = r.url
-        self.last_update = self.get_last_update_date(soup)
         self.title = soup.title.string
         self.is_active = self.get_is_active(soup)
-        self.pdf_url = self.get_pdf_url(soup)
-        self.pdf = ""
+        # do not expect details for inactive records
+        if self.is_active:
+            self.last_update = self.get_last_update_date(soup)
+            self.pdf_url = self.get_pdf_url(soup)
 
     def get_last_update_date(self, soup):
         m = re.findall(latest_update_string, str(soup))
@@ -59,6 +73,9 @@ class SrRecord(object):
         return base_url + "/" + pdf_url
 
     def download_pdf(self, download_dir):
+        if not self.pdf_url:
+            logger.info(f"No PDF found for ID {self.sr_id}.")
+            return
         pdf_file = requests.get(self.pdf_url)
         if pdf_file:
             file_name = f"{download_dir}/{self.title}.pdf"
