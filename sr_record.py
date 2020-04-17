@@ -126,13 +126,13 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Fetch legal documents from admin.ch classified collection ("Systematische Rechtssammlung").')
+    parser = argparse.ArgumentParser(
+        description='Fetch legal documents from admin.ch.')
     parser.add_argument('sr_ids', metavar='ID', nargs='+',
                         help='IDs of documents to fetch')
     parser.add_argument('-o', '--output_dir', default=download_dir,
-            help='where to place the PDF files')
+                        help='where to place the PDF files')
     parser.add_argument('-p', '--print_only', action='store_true',
-            help='do not download anything, just print some info')
+                        help='do not download anything, just print some info')
     args = parser.parse_args()
     main(args)
-
