@@ -1,6 +1,6 @@
 # Intended Use
 
-Fetch information about legal documents from [https://www.admin.ch/gov/de/start/bundesrecht/systematische-sammlung.html](Swiss classified collection). A legal document may be a federal law, directive or other regulation.
+Fetch information about legal documents from [admin.ch classified collection](https://www.admin.ch/gov/de/start/bundesrecht/systematische-sammlung.html). A legal document may be a federal law, directive or other regulation.
 
 Provides some sort of "API for the poor". Works by parsing HTML pages.
 
