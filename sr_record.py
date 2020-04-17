@@ -5,14 +5,21 @@ import re
 
 from bs4 import BeautifulSoup
 import requests
+import yaml
 
 search_url = "https://www.admin.ch/opc/search/?text={}"
 latest_update_string = r"\(Stand am ([^<]*)\)<"
 is_active_string = "Dieser Text ist in Kraft"
 download_dir = "downloads"
-logger = logging.getLogger("console")
-file_logger = logging.getLogger("file_logger")
-logging.basicConfig(format='%(message)s', level=logging.INFO)
+logger = logging.getLogger("root")
+csv_logger = logging.getLogger("csv_logger")
+
+
+def setup_logging():
+    import logging.config
+    with open('log_conf.yaml') as f:
+        conf = yaml.load(f, Loader=yaml.SafeLoader)
+        logging.config.dictConfig(conf)
 
 
 class SrRecord(object):
@@ -86,22 +93,29 @@ class SrRecord(object):
         )
 
 
+def keep_unique_only(id_list):
+    return list(set(id_list))
+
+
 def main(args):
+
+    setup_logging()
 
     if not args.print_only:
         if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir)
 
     records = []
-    for sr_id in args.sr_ids:
+    sr_ids = keep_unique_only(args.sr_ids)
+    for sr_id in sr_ids:
         record = SrRecord(sr_id)
         record.populate()
         records.append(record)
         logger.info(record)
 
-    logger.info(SrRecord.get_csv_header())
+    csv_logger.info(SrRecord.get_csv_header())
     for record in records:
-        logger.info(record.to_csv())
+        csv_logger.info(record.to_csv())
 
     if args.print_only:
         logger.info("Skipping downloads.")
