@@ -93,8 +93,9 @@ class SrRecord(object):
         )
 
 
-def keep_unique_only(id_list):
-    return list(set(id_list))
+def clean_up_ids(id_list):
+    unique_ids = list(set(id_list))
+    return sorted(unique_ids)
 
 
 def main(args):
@@ -106,7 +107,7 @@ def main(args):
             os.makedirs(args.output_dir)
 
     records = []
-    sr_ids = keep_unique_only(args.sr_ids)
+    sr_ids = clean_up_ids(args.sr_ids)
     for sr_id in sr_ids:
         record = SrRecord(sr_id)
         record.populate()
